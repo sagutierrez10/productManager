@@ -7,6 +7,8 @@ const AllProducts = () => {
 
     const [allProducts, setAllProducts] = useState([])
 
+    const [deleteClicked, setDeleteClicked] = useState(false)
+
     useEffect(() => {
         axios.get("http://localhost:8000/api/products")
             .then(res => {
@@ -14,7 +16,17 @@ const AllProducts = () => {
                 setAllProducts(res.data.results)
             })
             .catch(err => console.log("Error---->", err))
-    }, [])
+    }, [deleteClicked])
+
+    const deleteClickHandler =(e, idOfProduct)=>{
+        console.log("trying to delete product with this id-->", idOfProduct)
+        axios.delete(`http://localhost:8000/api/products/${idOfProduct}`)
+            .then(res=>{
+                console.log("res after axios delete-->", res)
+                setDeleteClicked(!deleteClicked)
+            })
+            .catch(err=>console.log("errrr when deleting-->", err))
+    }
 
     // let [formInfo, setFormInfo]= useState({
     //     title: null,
@@ -65,7 +77,9 @@ const AllProducts = () => {
                 <h3>All Products:</h3>
                 {allProducts.map((product, i) => {
                     return <ul key={i} style={{ listStyleType: "none" }}>
-                        <li><Link to={`/products/${product._id}`}>{product.title}</Link></li>
+                        <li><Link to={`/products/${product._id}`}>{product.title}</Link>| 
+                        <Link to ={`/products/${product._id}/edit`} className="btn btn-outline-warning">Edit</Link>|
+                        <button onClick = {(e)=>deleteClickHandler(e,product._id)} className="btn btn-outline-danger">Delete Product</button></li>
                     </ul>
                 })}
         </div>

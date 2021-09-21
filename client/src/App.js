@@ -4,6 +4,7 @@ import AllProducts from './components/AllProducts';
 import {BrowserRouter, Switch, Route, Link} from "react-router-dom";
 import OneProduct from './components/OneProduct';
 import ProductForm from './components/ProductForm';
+import Edit from './components/Edit';
 
 function App() {
   return (
@@ -15,9 +16,13 @@ function App() {
           <ProductForm></ProductForm>
           <AllProducts></AllProducts>
         </Route>
-        <Route exatc path="/products/:idParams">
+        <Route exact path="/products/:idParams">
           <Link className="btn btn-success" to="/">Home</Link>
           <OneProduct></OneProduct>
+        </Route>
+        <Route exact path= "/products/:idParams/edit">
+          <Edit></Edit>
+          <Link className="btn btn-success" to="/">Home</Link>
         </Route>
       </Switch>
     </div>

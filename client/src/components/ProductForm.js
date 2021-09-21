@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import axios from "axios";
-import {Link} from "react-router-dom";
 import { useHistory } from 'react-router-dom';
 
 const ProductForm= ()=>{
@@ -12,6 +11,8 @@ let [formInfo, setFormInfo]= useState({
     price: null,
     description: null
 })
+
+let [validationErrors, setValidationErrors] = useState({})
 
 const changeHandler = (e)=>{
     console.log("changign something")
@@ -28,7 +29,11 @@ const submitHandler= (e)=>{
     axios.post("http://localhost:8000/api/products", formInfo)
         .then(res=>{
             console.log("response after submitting form request",res)
+            if(res.data.err){
+                setValidationErrors(res.data.err.errors)
+            }else{
             history.push("/")
+            }
         })
         .catch(err=>console.log(err))
 }
@@ -40,14 +45,17 @@ return (
                 <label for="inputEmail3" className="col-sm-2 col-form-label">Title:</label>
                 <div className="col-sm-10">
                     <input onChange={changeHandler} type="name" className="form-control" name="title"/>
+                    <p className="text-danger">{validationErrors.title? validationErrors.title.message: ""}</p>
                 </div>
                 <label for="inputEmail3" className="col-sm-2 col-form-label">Price:</label>
                 <div className="col-sm-10">
                     <input onChange={changeHandler} type="number" className="form-control" name="price"/>
+                    <p className="text-danger">{validationErrors.price? validationErrors.price.message: ""}</p>
                 </div>
                 <label for="inputEmail3" className="col-sm-2 col-form-label">Description:</label>
                 <div className="col-sm-10">
                     <input type="name" onChange={changeHandler} className="form-control" name="description"/>
+                    <p className="text-danger">{validationErrors.description? validationErrors.description.message: ""}</p>
                     <br></br>
                     <p style={{textAlign:"right"}}><button type="submit" className="btn btn-light">Create</button></p>
                 </div>
